@@ -1,8 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:project_watch_movie/api/api.dart';
 
 import 'package:project_watch_movie/constant.dart';
+import 'package:project_watch_movie/model/movie.dart';
+import 'package:project_watch_movie/ui/controller/movie_controller.dart';
 // import 'package:project_watch_movie/ui/in_home_page.dart';
 import 'package:project_watch_movie/ui/in_home_page/in_home_page.dart';
 import 'package:project_watch_movie/ui/in_home_page/in_home_page_three.dart';
@@ -10,6 +13,7 @@ import 'package:project_watch_movie/ui/in_home_page/in_home_page_two.dart';
 import 'package:project_watch_movie/ui/in_home_page_top/in_home_page_three.dart';
 import 'package:project_watch_movie/ui/in_home_page_top/in_home_page_top_one.dart';
 import 'package:project_watch_movie/ui/in_home_page_top/in_home_page_top_two.dart';
+import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class HomePage extends StatefulWidget {
@@ -22,6 +26,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late MovieController movieController;
+  void initState() {
+    super.initState();
+    movieController = context.read<MovieController>();
+    movieController.getDataMovieInformation();
+  }
+
   List<Widget> homePageTop = const [
     InHomePageTopOne(),
     InHomePageTopTwo(),
@@ -173,93 +184,115 @@ class _HomePageState extends State<HomePage> {
                 const SizedBox(
                   height: 8,
                 ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 30),
-                  height: 120,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: item.length,
-                    controller: _pageController,
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (content) => homePageTop[index],
-                            ),
-                          );
-                        },
-                        child: Container(
-                          width: 260,
-                          margin: const EdgeInsets.symmetric(horizontal: 6),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(35),
-                            color: Colors.black,
-                            image: DecorationImage(
-                              image: AssetImage(
-                                imageTop[index],
-                              ),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                              gradient: const LinearGradient(
-                                begin: Alignment.bottomCenter,
-                                end: Alignment.topCenter,
-                                colors: [Colors.black, Colors.transparent],
-                              ),
-                            ),
-                            padding: const EdgeInsets.only(
-                                right: 20, left: 20, top: 10, bottom: 10),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      nameMovie[index],
-                                      style: const TextStyle(
-                                          fontSize: 18,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold),
+                context.watch<MovieController>().movieInformation.isNotEmpty
+                    ? Consumer<MovieController>(
+                        builder: (context, value, child) => Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 30),
+                          height: 120,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: context
+                                .watch<MovieController>()
+                                .movieInformation
+                                .length,
+                            controller: _pageController,
+                            itemBuilder: (context, index) {
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (content) => homePageTop[index],
                                     ),
-                                    Container(
-                                      padding: const EdgeInsets.all(2),
-                                      width: 40,
-                                      height: 15,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          color: Colors.amber),
-                                      child: const Text(
-                                        'IMDb 8.5',
-                                        style: TextStyle(
-                                            fontSize: 8,
-                                            fontWeight: FontWeight.bold),
+                                  );
+                                },
+                                child: Container(
+                                  width: 260,
+                                  margin:
+                                      const EdgeInsets.symmetric(horizontal: 6),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(35),
+                                    color: Colors.black,
+                                    image: DecorationImage(
+                                      image: NetworkImage(
+                                        context
+                                            .watch<MovieController>()
+                                            .movieInformation[index]
+                                            .poster_url,
+                                      ),
+                                      fit: BoxFit.fill,
+                                    ),
+                                  ),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(30),
+                                      gradient: const LinearGradient(
+                                        begin: Alignment.bottomCenter,
+                                        end: Alignment.topCenter,
+                                        colors: [
+                                          Colors.black,
+                                          Colors.transparent
+                                        ],
                                       ),
                                     ),
-                                  ],
+                                    padding: const EdgeInsets.only(
+                                        right: 20,
+                                        left: 20,
+                                        top: 10,
+                                        bottom: 10),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              movieController
+                                                  .movieInformation[index].name,
+                                              style: const TextStyle(
+                                                  fontSize: 11,
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Container(
+                                              padding: const EdgeInsets.all(2),
+                                              width: 40,
+                                              height: 15,
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  color: Colors.amber),
+                                              child: const Text(
+                                                'IMDb 8.5',
+                                                style: TextStyle(
+                                                    fontSize: 8,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ),
-                              ],
-                            ),
+                              );
+                            },
                           ),
                         ),
-                      );
-                    },
-                  ),
-                ),
-                const SizedBox(
+                      )
+                    : SizedBox(),
+                SizedBox(
                   height: 15,
                 ),
                 Center(
                   child: SmoothPageIndicator(
                     controller: _pageController,
-                    count: 3,
+                    count: context
+                        .watch<MovieController>()
+                        .movieInformation
+                        .length,
                     effect: ExpandingDotsEffect(
                       activeDotColor: Colors.white.withOpacity(.5),
                       dotColor: Colors.white.withOpacity(.2),
@@ -350,8 +383,11 @@ class _HomePageState extends State<HomePage> {
                           child: Container(
                             decoration: BoxDecoration(
                               image: DecorationImage(
-                                image: AssetImage(
-                                  imageMovie[index],
+                                image: NetworkImage(
+                                  context
+                                      .watch<MovieController>()
+                                      .movieInformation[index]
+                                      .poster_url,
                                 ),
                                 fit: BoxFit.cover,
                               ),
