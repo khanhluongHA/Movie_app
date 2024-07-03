@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:flutter/rendering.dart';
+// import 'package:flutter/rendering.dart';
 import 'package:project_watch_movie/constant.dart';
-import 'package:project_watch_movie/model/movie.dart';
+// import 'package:project_watch_movie/model/movie.dart';
 import 'package:http/http.dart' as http;
 
 class FetchApi {
@@ -11,6 +11,7 @@ class FetchApi {
   static Future<Map<String, dynamic>> getMovies() async {
     var uri = Uri.https(
         Constants.baseUrl, '/danh-sach/phim-moi-cap-nhat', {'page': '1'});
+    print(uri);
     Map<String, dynamic> result = {};
     try {
       final response = await http.get(uri);
@@ -43,4 +44,6 @@ class FetchApi {
     }
     return result;
   }
+
+  ///api tail
 }

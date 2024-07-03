@@ -49,7 +49,7 @@ class _BottomBarState extends State<BottomBar> {
         gapLocation: GapLocation.none,
         onTap: (index) {
           setState(() {
-            // _isSelected = [false, false, false];
+            
             _bottomNavIndex = index;
           });
         },

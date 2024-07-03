@@ -8,8 +8,8 @@ class MovieController extends ChangeNotifier {
   Future<void> getDataMovieInformation() async {
     final response = await FetchApi.getMovies();
     movieInformation = MovieInformation.convertToList(response['items']);
-    print(movieInformation.length);
-    print('----------------------------');
+    // print(movieInformation.length);
+    // print('----------------------------');
     notifyListeners();
   }
 }

@@ -1,31 +1,39 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:json_annotation/json_annotation.dart';
 
 part 'movie_information.g.dart';
 
 @JsonSerializable()
 class MovieInformation {
-  final String name;
+  final String? name;
 
-  final String slug;
+  final String? slug;
 
-  final String origin_name;
+  @JsonKey(name: "origin_name")
+  final String? originName;
 
-  String poster_url;
+  @JsonKey(name: "poster_url")
+  final String? posterUrl;
 
-  String thumb_url;
+  @JsonKey(name: "thumb_url")
+  final String? thumbUrl;
 
-  final int year;
+  final int? year;
 
-  bool isFavorite;
+  final String? actor;
 
-  MovieInformation(
-      {this.name = '',
-      this.slug = '',
-      this.origin_name = '',
-      this.poster_url = '',
-      this.thumb_url = ' ',
-      this.year = 2020,
-      this.isFavorite = false});
+  final bool? isFavorite;
+
+  MovieInformation({
+    this.name,
+    this.slug,
+    this.originName,
+    this.posterUrl,
+    this.thumbUrl,
+    this.year = 2020,
+    this.actor,
+    this.isFavorite = false
+  });
 
   factory MovieInformation.fromJson(Map<String, dynamic> json) =>
       _$MovieInformationFromJson(json);
@@ -42,6 +50,6 @@ class MovieInformation {
 
   @override
   String toString() {
-    return 'MovieInformation(name: $name, slug: $slug, origin_name: $origin_name, poster_url: $poster_url, thumb_url: $thumb_url, year: $year, isFavorite: $isFavorite)';
+    return 'MovieInformation(name: $name, slug: $slug, originName: $originName, posterUrl: $posterUrl, thumbUrl: $thumbUrl, year: $year, isFavorite: $isFavorite, actor: $actor)';
   }
 }
