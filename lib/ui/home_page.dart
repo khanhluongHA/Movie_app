@@ -1,15 +1,10 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-
 import 'package:project_watch_movie/constant.dart';
-// import 'package:project_watch_movie/ui/in_home_page.dart';
-import 'package:project_watch_movie/ui/in_home_page/in_home_page.dart';
-import 'package:project_watch_movie/ui/in_home_page/in_home_page_three.dart';
-import 'package:project_watch_movie/ui/in_home_page/in_home_page_two.dart';
-import 'package:project_watch_movie/ui/in_home_page_top/in_home_page_three.dart';
-import 'package:project_watch_movie/ui/in_home_page_top/in_home_page_top_one.dart';
-import 'package:project_watch_movie/ui/in_home_page_top/in_home_page_top_two.dart';
+import 'package:project_watch_movie/ui/Screen/detail_screen.dart';
+import 'package:project_watch_movie/ui/controller/movie_controller.dart';
+import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class HomePage extends StatefulWidget {
@@ -22,43 +17,22 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<Widget> homePageTop = const [
-    InHomePageTopOne(),
-    InHomePageTopTwo(),
-    InHomePageTopThree(),
-  ];
+  late MovieController movieController;
+  void initState() {
+    super.initState();
+    movieController = context.read<MovieController>();
+    movieController.getDataMovieInformation();
+  }
 
-  List<Widget> homePages = const [
-    InHomePage(),
-    InHomePageTwo(),
-    InHomePageThree()
-  ];
   final PageController _pageController = PageController();
   final PageController _pageControllerTwo = PageController();
-  final List<String> item = List.generate(3, (index) => "Item $index");
-  int currentIndex = 0;
   final List<String> listMovie =
       List.generate(4, (index) => "ListMovie $index");
-  // final List<String> imageBottom = List.generate(3, (index) => "image $index");
-  final List<String> listMovies =
-      List.generate(3, (index) => "listMovies $index");
-  List<String> imageTop = [
-    'assets/images/imageTop1.png',
-    'assets/images/imageTop2.jpg',
-    'assets/images/imageTop3.jpg',
-  ];
-  List<String> nameMovie = ['Deadpool 2', 'Despicable 4', 'Inside out 2'];
-
   List<String> iconMovie = [
     'assets/images/content1.png',
     'assets/images/content2.png',
     'assets/images/content3.png',
     'assets/images/content4.png',
-  ];
-  List<String> imageMovie = [
-    'assets/images/movie1.jpg',
-    'assets/images/movie2.jpg',
-    'assets/images/movie3.jpg',
   ];
   List<String> content = [
     'Genres',
@@ -84,7 +58,7 @@ class _HomePageState extends State<HomePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  padding: const EdgeInsets.only(top: 40, right: 50, left: 50),
+                  padding: const EdgeInsets.only(top: 78, right: 64, left: 64),
                   child: const Row(
                     // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -103,30 +77,35 @@ class _HomePageState extends State<HomePage> {
                             color: Colors.white),
                       ),
                       Spacer(),
-                      Icon(
-                        Icons.notifications,
-                        size: 24,
-                        color: Colors.white,
+                      Image(
+                        image: AssetImage('assets/images/chuong.png'),
+                        width: 24,
+                        height: 24,
                       ),
                     ],
                   ),
                 ),
                 const SizedBox(
-                  height: 7,
+                  height: 20,
                 ),
                 Center(
                   child: Container(
                     height: 50,
-                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                    padding: const EdgeInsets.symmetric(horizontal: 23),
                     width: size.width * .8,
                     // ignore: sort_child_properties_last
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
-                          Icons.search,
-                          color: Colors.white54.withOpacity(.7),
+                        Image(
+                          image: const AssetImage('assets/images/search.png'),
+                          width: 22,
+                          height: 22,
+                          color: Colors.white.withOpacity(0.75),
+                        ),
+                        const SizedBox(
+                          width: 11,
                         ),
                         Expanded(
                           child: TextField(
@@ -134,14 +113,26 @@ class _HomePageState extends State<HomePage> {
                             decoration: InputDecoration(
                               hintText: 'Search',
                               hintStyle: TextStyle(
-                                  color: Colors.white.withOpacity(.7)),
+                                  color: Colors.white.withOpacity(.5)),
                               border: InputBorder.none,
                             ),
                           ),
                         ),
-                        Icon(
-                          Icons.mic,
-                          color: Colors.white.withOpacity(.7),
+                        Container(
+                          width: 1,
+                          height: 30,
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(.2),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 17,
+                        ),
+                        Image(
+                          image: const AssetImage('assets/images/mic.png'),
+                          color: Colors.white.withOpacity(.5),
+                          width: 16,
+                          height: 22,
                         ),
                       ],
                     ),
@@ -153,12 +144,12 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
                       borderRadius: BorderRadius.circular(15),
-                      border: Border.all(color: Colors.white.withOpacity(.3)),
+                      border: Border.all(color: Colors.white.withOpacity(.2)),
                     ),
                   ),
                 ),
                 const SizedBox(
-                  height: 8,
+                  height: 26,
                 ),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 33),
@@ -171,96 +162,147 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 const SizedBox(
-                  height: 8,
+                  height: 15,
                 ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 30),
-                  height: 120,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: item.length,
-                    controller: _pageController,
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (content) => homePageTop[index],
-                            ),
-                          );
-                        },
-                        child: Container(
-                          width: 260,
-                          margin: const EdgeInsets.symmetric(horizontal: 6),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(35),
-                            color: Colors.black,
-                            image: DecorationImage(
-                              image: AssetImage(
-                                imageTop[index],
-                              ),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                              gradient: const LinearGradient(
-                                begin: Alignment.bottomCenter,
-                                end: Alignment.topCenter,
-                                colors: [Colors.black, Colors.transparent],
-                              ),
-                            ),
-                            padding: const EdgeInsets.only(
-                                right: 20, left: 20, top: 10, bottom: 10),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      nameMovie[index],
-                                      style: const TextStyle(
-                                          fontSize: 18,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold),
+                context.watch<MovieController>().movieInformation.isNotEmpty
+                    ? Consumer<MovieController>(
+                        builder: (context, value, child) => SizedBox(
+                          // padding: const EdgeInsets.symmetric(horizontal: 0),
+                          height: 141,
+                          child: CarouselSlider.builder(
+                            itemCount: context
+                                .watch<MovieController>()
+                                .movieInformation
+                                .length,
+                            itemBuilder: (context, index, realIndex) {
+                              return ClipRRect(
+                                borderRadius: BorderRadius.circular(30),
+                                child: SizedBox(
+                                  // color: Colors.amber,
+                                  width: 328,
+                                  height: 141,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const DetailScreen()),
+                                      );
+                                    },
+                                    child: Stack(
+                                      children: [
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                                image: NetworkImage(
+                                                  context
+                                                          .watch<
+                                                              MovieController>()
+                                                          .movieInformation[
+                                                              index]
+                                                          .posterUrl ??
+                                                      '',
+                                                ),
+                                                fit: BoxFit.cover),
+                                          ),
+                                        ),
+                                        Container(
+                                          padding: const EdgeInsets.only(
+                                              left: 26, bottom: 15, right: 26),
+                                          width: 328,
+                                          height: 141,
+                                          decoration: const BoxDecoration(
+                                            gradient: LinearGradient(
+                                              begin: Alignment.bottomCenter,
+                                              end: Alignment.topCenter,
+                                              colors: [
+                                                Colors.black,
+                                                Colors.transparent
+                                              ],
+                                            ),
+                                          ),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  Expanded(
+                                                    child: Text(
+                                                      movieController
+                                                          .movieInformation[
+                                                              index]
+                                                          .name!,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      maxLines: 2,
+                                                      style: const TextStyle(
+                                                        fontSize: 18,
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Expanded(
+                                                    child: Container(
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(15),
+                                                          color: Colors.amber),
+                                                      width: 44.61,
+                                                      height: 16,
+                                                      child: const Center(
+                                                        child: Text(
+                                                          'IMDb 8.5',
+                                                          style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontWeight:
+                                                                FontWeight.w700,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      ],
                                     ),
-                                    Container(
-                                      padding: const EdgeInsets.all(2),
-                                      width: 40,
-                                      height: 15,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          color: Colors.amber),
-                                      child: const Text(
-                                        'IMDb 8.5',
-                                        style: TextStyle(
-                                            fontSize: 8,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                  ],
+                                  ),
                                 ),
-                              ],
+                              );
+                            },
+                            options: CarouselOptions(
+                              height: 141,
+                              autoPlay: false,
+                              viewportFraction: 0.60,
+                              enlargeCenterPage: true,
+                              autoPlayCurve: Curves.fastOutSlowIn,
+                              autoPlayAnimationDuration:
+                                  const Duration(seconds: 1),
                             ),
                           ),
                         ),
-                      );
-                    },
-                  ),
-                ),
+                      )
+                    : const SizedBox(),
                 const SizedBox(
-                  height: 15,
+                  height: 17,
                 ),
                 Center(
                   child: SmoothPageIndicator(
                     controller: _pageController,
-                    count: 3,
-                    effect: ExpandingDotsEffect(
+                    count: context
+                        .watch<MovieController>()
+                        .movieInformation
+                        .length,
+                    effect: JumpingDotEffect(
                       activeDotColor: Colors.white.withOpacity(.5),
                       dotColor: Colors.white.withOpacity(.2),
                       dotHeight: 7,
@@ -269,37 +311,42 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 const SizedBox(
-                  height: 15,
+                  height: 20,
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 30),
-                  height: 80,
+                  padding: const EdgeInsets.symmetric(horizontal: 50),
+                  height: 95,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: listMovie.length,
                     itemBuilder: (context, index) {
                       return Container(
-                        width: 53,
-                        margin: const EdgeInsets.symmetric(horizontal: 8),
+                        width: 69,
+                        margin: const EdgeInsets.symmetric(horizontal: 17),
                         decoration: BoxDecoration(
+                          border: Border.all(
+                              color: Colors.white.withOpacity(.3), width: 1),
                           borderRadius: BorderRadius.circular(15),
                           gradient: LinearGradient(colors: [
+                            const Color(0xffA1F3FE).withOpacity(.3),
                             Colors.white.withOpacity(.4),
-                            const Color(0xffA1F3FE).withOpacity(.5),
                           ]),
                         ),
                         child: Container(
                           padding: const EdgeInsets.symmetric(vertical: 12),
                           child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Image.asset(
                                 iconMovie[index],
+                                width: 31,
+                                height: 31,
+                                color: Colors.white.withOpacity(0.75),
                               ),
                               Text(
                                 content[index],
-                                style: TextStyle(
-                                    color: Colors.white.withOpacity(.6),
+                                style: const TextStyle(
+                                    color: Colors.white,
                                     fontSize: 9,
                                     fontWeight: FontWeight.w400),
                               ),
@@ -311,47 +358,55 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 const SizedBox(
-                  height: 10,
+                  height: 35,
                 ),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 33),
                   child: const Text(
-                    'Upcoming release',
+                    'Upcoming releases',
                     style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
                         color: Colors.white),
                   ),
                 ),
                 const SizedBox(
-                  height: 10,
+                  height: 15,
                 ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 33),
-                  height: 180,
+                SizedBox(
+                  // padding: const EdgeInsets.symmetric(horizontal: 33),
+                  height: 215,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: imageMovie.length,
+                    itemCount: context
+                        .watch<MovieController>()
+                        .movieInformation
+                        .length,
                     controller: _pageControllerTwo,
                     itemBuilder: (context, index) {
-                      return Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 8),
-                        width: 150,
+                      return SizedBox(
+                        // margin: const EdgeInsets.symmetric(horizontal: 19),
+                        width: 165,
                         // height: 160,
                         child: GestureDetector(
                           onTap: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (content) => homePages[index],
+                                builder: (context) => const DetailScreen(),
                               ),
                             );
                           },
                           child: Container(
+                            margin: const EdgeInsets.only(right: 19),
                             decoration: BoxDecoration(
                               image: DecorationImage(
-                                image: AssetImage(
-                                  imageMovie[index],
+                                image: NetworkImage(
+                                  context
+                                          .watch<MovieController>()
+                                          .movieInformation[index]
+                                          .posterUrl ??
+                                      '',
                                 ),
                                 fit: BoxFit.cover,
                               ),
