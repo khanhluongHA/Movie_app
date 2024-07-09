@@ -1,11 +1,13 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:project_watch_movie/model/list_content.dart';
+import 'package:provider/provider.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:project_watch_movie/constant.dart';
 import 'package:project_watch_movie/ui/Screen/detail_screen.dart';
 import 'package:project_watch_movie/ui/controller/movie_controller.dart';
-import 'package:provider/provider.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({
@@ -18,6 +20,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late MovieController movieController;
+  @override
   void initState() {
     super.initState();
     movieController = context.read<MovieController>();
@@ -26,24 +29,21 @@ class _HomePageState extends State<HomePage> {
 
   final PageController _pageController = PageController();
   final PageController _pageControllerTwo = PageController();
+  final CarouselController _carouselController = CarouselController();
+  int _currentIndex = 0;
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
   final List<String> listMovie =
       List.generate(4, (index) => "ListMovie $index");
-  List<String> iconMovie = [
-    'assets/images/content1.png',
-    'assets/images/content2.png',
-    'assets/images/content3.png',
-    'assets/images/content4.png',
-  ];
-  List<String> content = [
-    'Genres',
-    'TV series',
-    'Movies',
-    'In Theatre',
-  ];
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
+      backgroundColor: Colors.red,
       body: Stack(
         children: [
           Container(
@@ -59,28 +59,28 @@ class _HomePageState extends State<HomePage> {
               children: [
                 Container(
                   padding: const EdgeInsets.only(top: 78, right: 64, left: 64),
-                  child: const Row(
+                  child: Row(
                     // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
+                      const Text(
                         'Hello, ',
                         style: TextStyle(
                           fontSize: 18,
                           color: Colors.white,
                         ),
                       ),
-                      Text(
+                      const Text(
                         'Jana!',
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
                             color: Colors.white),
                       ),
-                      Spacer(),
-                      Image(
-                        image: AssetImage('assets/images/chuong.png'),
-                        width: 24,
+                      const Spacer(),
+                      SvgPicture.asset(
+                        'assets/images/bell.svg',
                         height: 24,
+                        width: 24,
                       ),
                     ],
                   ),
@@ -98,10 +98,11 @@ class _HomePageState extends State<HomePage> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Image(
-                          image: const AssetImage('assets/images/search.png'),
+                        SvgPicture.asset(
+                          'assets/images/search.svg',
                           width: 22,
                           height: 22,
+                          // ignore: deprecated_member_use
                           color: Colors.white.withOpacity(0.75),
                         ),
                         const SizedBox(
@@ -128,12 +129,13 @@ class _HomePageState extends State<HomePage> {
                         const SizedBox(
                           width: 17,
                         ),
-                        Image(
-                          image: const AssetImage('assets/images/mic.png'),
+                        SvgPicture.asset(
+                          'assets/images/mic.svg',
+                          // ignore: deprecated_member_use
                           color: Colors.white.withOpacity(.5),
                           width: 16,
                           height: 22,
-                        ),
+                        )
                       ],
                     ),
                     decoration: BoxDecoration(
@@ -170,6 +172,7 @@ class _HomePageState extends State<HomePage> {
                           // padding: const EdgeInsets.symmetric(horizontal: 0),
                           height: 141,
                           child: CarouselSlider.builder(
+                            carouselController: _carouselController,
                             itemCount: context
                                 .watch<MovieController>()
                                 .movieInformation
@@ -180,14 +183,20 @@ class _HomePageState extends State<HomePage> {
                                 child: SizedBox(
                                   // color: Colors.amber,
                                   width: 328,
-                                  height: 141,
+                                  height: 100,
                                   child: GestureDetector(
                                     onTap: () {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) =>
-                                                const DetailScreen()),
+                                          builder: (context) => DetailScreen(
+                                            slug: context
+                                                    .watch<MovieController>()
+                                                    .movieInformation[index]
+                                                    .slug ??
+                                                '',
+                                          ),
+                                        ),
                                       );
                                     },
                                     child: Stack(
@@ -282,11 +291,16 @@ class _HomePageState extends State<HomePage> {
                             options: CarouselOptions(
                               height: 141,
                               autoPlay: false,
-                              viewportFraction: 0.60,
+                              viewportFraction: 0.8,
                               enlargeCenterPage: true,
                               autoPlayCurve: Curves.fastOutSlowIn,
-                              autoPlayAnimationDuration:
-                                  const Duration(seconds: 1),
+                              onPageChanged: (index, reason) {
+                                setState(
+                                  () {
+                                    _currentIndex = index;
+                                  },
+                                );
+                              },
                             ),
                           ),
                         ),
@@ -295,34 +309,45 @@ class _HomePageState extends State<HomePage> {
                 const SizedBox(
                   height: 17,
                 ),
-                Center(
-                  child: SmoothPageIndicator(
-                    controller: _pageController,
-                    count: context
-                        .watch<MovieController>()
-                        .movieInformation
-                        .length,
-                    effect: JumpingDotEffect(
-                      activeDotColor: Colors.white.withOpacity(.5),
-                      dotColor: Colors.white.withOpacity(.2),
-                      dotHeight: 7,
-                      dotWidth: 7,
-                    ),
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    for (int i = 0;
+                        i <
+                            context
+                                .watch<MovieController>()
+                                .movieInformation
+                                .length;
+                        i++)
+                      Container(
+                        height: 8,
+                        width: 8,
+                        margin: const EdgeInsets.all(4.3),
+                        decoration: BoxDecoration(
+                          color: _currentIndex == i
+                              ? Constants.dotGradient.colors.first
+                              : Constants.dotGradientExtra.colors.first,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                  ],
                 ),
                 const SizedBox(
                   height: 20,
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 50),
+                  padding: const EdgeInsets.only(right: 33, left: 50),
                   height: 95,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: listMovie.length,
+                    itemCount: rowContent.length,
                     itemBuilder: (context, index) {
+                      final content = rowContent[index];
                       return Container(
+                        margin: const EdgeInsets.only(
+                          right: 17,
+                        ),
                         width: 69,
-                        margin: const EdgeInsets.symmetric(horizontal: 17),
                         decoration: BoxDecoration(
                           border: Border.all(
                               color: Colors.white.withOpacity(.3), width: 1),
@@ -333,22 +358,22 @@ class _HomePageState extends State<HomePage> {
                           ]),
                         ),
                         child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          margin: const EdgeInsets.symmetric(horizontal: 12),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Image.asset(
-                                iconMovie[index],
-                                width: 31,
-                                height: 31,
-                                color: Colors.white.withOpacity(0.75),
+                              SvgPicture.asset(
+                                content.imageContent ?? '',
+                                allowDrawingOutsideViewBox: true,
+                                width: 29,
+                                height: 29,
                               ),
                               Text(
-                                content[index],
+                                content.nameContent ?? '',
                                 style: const TextStyle(
-                                    color: Colors.white,
                                     fontSize: 9,
-                                    fontWeight: FontWeight.w400),
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.white),
                               ),
                             ],
                           ),
@@ -393,7 +418,13 @@ class _HomePageState extends State<HomePage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const DetailScreen(),
+                                builder: (context) => DetailScreen(
+                                  slug: context
+                                          .watch<MovieController>()
+                                          .movieInformation[index]
+                                          .slug ??
+                                      '',
+                                ),
                               ),
                             );
                           },
@@ -425,15 +456,21 @@ class _HomePageState extends State<HomePage> {
                 Center(
                   child: SmoothPageIndicator(
                     controller: _pageControllerTwo,
-                    count: 3,
+                    count: context
+                        .watch<MovieController>()
+                        .movieInformation
+                        .length,
                     effect: JumpingDotEffect(
-                      activeDotColor: Colors.white.withOpacity(.5),
-                      dotColor: Colors.white.withOpacity(.2),
-                      dotHeight: 7,
-                      dotWidth: 7,
+                      activeDotColor: Constants.dotGradient.colors.first,
+                      dotColor: Constants.dotGradientExtra.colors.first,
+                      dotHeight: 8,
+                      dotWidth: 8,
                     ),
                   ),
-                )
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
               ],
             ),
           ),
