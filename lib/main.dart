@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-// import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
-import 'package:project_watch_movie/ui/bottom_bar.dart';
-import 'package:project_watch_movie/ui/controller/movie_controller.dart';
+import 'package:project_watch_movie/views/bottom_bar/bottom_bar.dart';
+import 'package:project_watch_movie/views/home/detail/detail_home_controller.dart';
+import 'package:project_watch_movie/views/home/home_controller.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -16,7 +16,10 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (_) => MovieController(),
+          create: (_) => HomeController(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => DetailHomeController(),
         ),
       ],
       child: const MaterialApp(

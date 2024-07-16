@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:project_watch_movie/constant.dart';
+import 'package:project_watch_movie/widgets/background_gradient.dart';
 
 class TransferPage extends StatefulWidget {
   const TransferPage({super.key});
@@ -11,13 +11,13 @@ class TransferPage extends StatefulWidget {
 class _TransferPageState extends State<TransferPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(colors: [
-            Constants.secondaryColor,
-            Constants.primaryColor,
-          ]),
+    return const BackGroundGradient(
+      child: Center(
+        child: Text(
+          'Shuffle',
+          style: TextStyle(
+            color: Colors.white,
+          ),
         ),
       ),
     );

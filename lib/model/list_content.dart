@@ -1,4 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:project_watch_movie/commons/svg_images.dart';
+
 class ListContent {
   final String? nameContent;
   final String? imageContent;
@@ -11,19 +13,19 @@ class ListContent {
 
 List<ListContent> rowContent = [
   ListContent(
-    imageContent: "assets/images/content1.svg",
+    imageContent: SvgImages.svgGenres,
     nameContent: "Genres",
   ),
   ListContent(
-    imageContent: "assets/images/content2.svg",
+    imageContent: SvgImages.svgTvSeries,
     nameContent: "TV series",
   ),
   ListContent(
-    imageContent: "assets/images/content3.svg",
+    imageContent: SvgImages.svgMovies,
     nameContent: "Movies",
   ),
   ListContent(
-    imageContent: "assets/images/content4.svg",
+    imageContent: SvgImages.svgTheatre,
     nameContent: "In Theatre",
   ),
 ];

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:project_watch_movie/constant.dart';
+import 'package:project_watch_movie/widgets/background_gradient.dart';
 
 class UserPage extends StatefulWidget {
   const UserPage({super.key});
@@ -11,13 +11,11 @@ class UserPage extends StatefulWidget {
 class _UserPageState extends State<UserPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(colors: [
-            Constants.secondaryColor,
-            Constants.primaryColor,
-          ]),
+    return const BackGroundGradient(
+      child: Center(
+        child: Text(
+          'Acount',
+          style: TextStyle(color: Colors.white),
         ),
       ),
     );

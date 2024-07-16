@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:project_watch_movie/ui/favorite_page.dart';
-import 'package:project_watch_movie/ui/home_page.dart';
-import 'package:project_watch_movie/ui/ticket_page.dart';
-import 'package:project_watch_movie/ui/transfer_page.dart';
-import 'package:project_watch_movie/ui/user_page.dart';
+import 'package:project_watch_movie/commons/app_colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:project_watch_movie/commons/svg_images.dart';
+import 'package:project_watch_movie/views/account/user_page.dart';
+import 'package:project_watch_movie/views/favorite/favorite_page.dart';
+import 'package:project_watch_movie/views/home/home_page.dart';
+import 'package:project_watch_movie/views/shuffle/transfer_page.dart';
+import 'package:project_watch_movie/views/ticket/ticket_page.dart';
 
 class BottomBar extends StatefulWidget {
   const BottomBar({super.key});
@@ -27,19 +29,20 @@ class _BottomBarState extends State<BottomBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.deepPurple,
       body: pages[_bottomNavIndex],
       bottomNavigationBar: Container(
-
-          // color: Colors.white.withOpacity(0.2),
           decoration: BoxDecoration(
             border: Border(
-              top: BorderSide(color: Colors.white.withOpacity(0.2), width: 2),
+              top: BorderSide(
+                color: Colors.white.withOpacity(0.2),
+                width: 1,
+              ),
             ),
-            gradient: LinearGradient(
-              // stops: [0.5, 1],
+            gradient: const LinearGradient(
               colors: [
-                Color(0xff6B66A6).withOpacity(0.9),
-                Color(0xff75D1DD).withOpacity(0.9),
+                AppColors.deepPurple,
+                AppColors.lavenderIndigo,
               ],
             ),
           ),
@@ -67,7 +70,7 @@ class _BottomBarState extends State<BottomBar> {
                       child: Container(
                         alignment: Alignment.center,
                         child: SvgPicture.asset(
-                          'assets/images/Vector.svg',
+                          SvgImages.svgHome,
                           allowDrawingOutsideViewBox: true,
                           width: 29,
                           height: 29,
@@ -86,7 +89,7 @@ class _BottomBarState extends State<BottomBar> {
                       child: Container(
                         alignment: Alignment.center,
                         child: SvgPicture.asset(
-                          'assets/images/Favorite.svg',
+                          SvgImages.svgFavorite,
                           allowDrawingOutsideViewBox: true,
                           width: 29,
                           height: 29,
@@ -105,7 +108,7 @@ class _BottomBarState extends State<BottomBar> {
                       child: Container(
                         alignment: Alignment.center,
                         child: SvgPicture.asset(
-                          'assets/images/ticket.svg',
+                          SvgImages.svgTicket,
                           allowDrawingOutsideViewBox: true,
                           width: 29,
                           height: 29,
@@ -124,10 +127,10 @@ class _BottomBarState extends State<BottomBar> {
                       child: Container(
                         alignment: Alignment.center,
                         child: SvgPicture.asset(
-                          'assets/images/Account.svg',
+                          SvgImages.svgAccount,
                           allowDrawingOutsideViewBox: true,
-                          width: 29,
-                          height: 29,
+                          width: 25,
+                          height: 25,
                         ),
                       ),
                     ),
@@ -143,7 +146,7 @@ class _BottomBarState extends State<BottomBar> {
                       child: Container(
                         alignment: Alignment.center,
                         child: SvgPicture.asset(
-                          'assets/images/shuffle.svg',
+                          SvgImages.svgShuffle,
                           allowDrawingOutsideViewBox: true,
                           width: 34,
                           height: 34,
